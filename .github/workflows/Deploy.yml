@@ -27,6 +27,7 @@ jobs:
         npm run build
 
     # 4. Upload to the Subdomain Folder
+    # ✅ CORRECT (Includes the secrets)
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
@@ -34,6 +35,4 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./dist/
-        # REPLACE THE LINE BELOW with the path you found in Step 1
-        # Example: ./public_html/my_subdomain_folder/
         server-dir: ./public_html/inspectPro/
