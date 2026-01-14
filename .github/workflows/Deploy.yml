@@ -35,4 +35,6 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./dist/
-        server-dir: ./public_html/inspectPro/
+        server-dir: ./public_html/inspectPro/ 
+        protocol: sftp             # 👈 Change this to sftp
+        port: 22
