@@ -1,0 +1,39 @@
+name: Deploy Subdomain to cPanel
+
+on:
+  push:
+    branches:
+      - main  # Confirm your branch name is 'main' or 'master'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Check out the code
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # 2. Install Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    # 3. Install Dependencies and Build
+    - name: Install and Build
+      run: |
+        npm install
+        npm run build
+
+    # 4. Upload to the Subdomain Folder
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./dist/
+        # REPLACE THE LINE BELOW with the path you found in Step 1
+        # Example: ./public_html/my_subdomain_folder/
+        server-dir: ./public_html/inspectPro/
