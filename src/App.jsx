@@ -11,6 +11,9 @@ import Supervisor from "./Components/Page/SupervisorDashboard.jsx";
 import Unauthorized from "./Components/Page/UnauthorizedPage.jsx";
 import InspectionDashboard from "./Components/Page/InspectionDashboard.jsx";
 import UserPage from "./Components/Dashboards/AdminFiles/UserManagement/UserPage.jsx";
+import Adduser from "./Components/Dashboards/AdminFiles/UserManagement/Adduser.jsx";
+import EditUser from "./Components/Dashboards/AdminFiles/UserManagement/EditUser.jsx";
+
 
 function App() {
   return (
@@ -58,6 +61,21 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["Admin"]}>
               <UserPage />
+            </ProtectedRoute>
+          }
+        /><Route
+          path="/admin/addusers"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <Adduser />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/edit-user/:userId"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <EditUser />
             </ProtectedRoute>
           }
         />

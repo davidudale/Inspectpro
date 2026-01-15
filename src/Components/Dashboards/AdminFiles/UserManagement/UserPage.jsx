@@ -1,47 +1,68 @@
 import { React, useEffect, useState } from "react";
 import AdminNavbar from "../../AdminNavbar";
-import { PlusCircle, Edit2, Trash2, User } from "lucide-react"; // Added User icon for empty state
+import { PlusCircle, Edit2, Trash2, User } from "lucide-react";
 import AdminSidebar from "../../AdminSidebar";
 import { db } from "../../../Auth/firebase"; 
-// FIXED: Removed incorrect imports from firebase/auth
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, doc, deleteDoc } from "firebase/firestore"; // Added doc and deleteDoc
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // Assuming you're using react-toastify for feedback
 
 const UserPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-  const usersCollection = collection(db, "users");
-  
-  const unsubscribe = onSnapshot(usersCollection, (snapshot) => {
-    // This creates a BRAND NEW array of all documents currently in the collection
-    const allUsers = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    
-    console.log("Total users fetched:", allUsers.length); // Debugging line
-    setUsers(allUsers);
-    setLoading(false);
-  });
+    const usersCollection = collection(db, "users");
+    const unsubscribe = onSnapshot(usersCollection, (snapshot) => {
+      const allUsers = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setUsers(allUsers);
+      setLoading(false);
+    });
 
-  return () => unsubscribe();
-}, []);
+    return () => unsubscribe();
+  }, []);
+
+  // --- FUNCTIONAL HANDLERS ---
+
+  const handleDelete = async (id, name) => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete ${name}? This action cannot be undone.`);
+    
+    if (confirmDelete) {
+      try {
+        await deleteDoc(doc(db, "users", id));
+        // Note: onSnapshot will automatically update the UI list
+        toast.success("User deleted successfully");
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        toast.error("Failed to delete user. Check your permissions.");
+      }
+    }
+  };
+
+  const handleEdit = (userId) => {
+    // Navigate to an edit page with the user ID as a parameter
+    navigate(`/admin/edit-user/${userId}`);
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-950 text-slate-200">
       <AdminNavbar />
       <div className="flex flex-1 relative">
         <AdminSidebar />
-        
-        {/* FIXED: Removed the extra nested flex div that was wrapping <main> */}
         <main className="flex-1 ml-16 lg:ml-64 p-4 lg:p-8 min-h-[calc(100vh-65px)] overflow-y-auto bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-900/50 via-slate-950 to-slate-950">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-bold text-white tracking-tight">
                 User Management
               </h1>
-              <button className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-orange-900/20 active:scale-95">
+              <button 
+                className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition-all shadow-lg shadow-orange-900/20 active:scale-95" 
+                onClick={() => navigate("/register")} 
+              >
                 <PlusCircle size={16} />
                 Add New User
               </button>
@@ -88,8 +109,20 @@ const UserPage = () => {
                           </td>
                           <td className="p-4 text-right">
                             <div className="flex justify-end gap-2">
-                              <button className="p-2 text-slate-500 hover:text-white transition-colors"><Edit2 size={14} /></button>
-                              <button className="p-2 text-slate-500 hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
+                              {/* EDIT BUTTON */}
+                              <button 
+                                onClick={() => handleEdit(user.id)}
+                                className="p-2 text-slate-500 hover:text-white transition-colors hover:bg-slate-800 rounded"
+                              >
+                                <Edit2 size={14} />
+                              </button>
+                              {/* DELETE BUTTON */}
+                              <button 
+                                onClick={() => handleDelete(user.id, user.name)}
+                                className="p-2 text-slate-500 hover:text-red-500 transition-colors hover:bg-slate-800 rounded"
+                              >
+                                <Trash2 size={14} />
+                              </button>
                             </div>
                           </td>
                         </tr>

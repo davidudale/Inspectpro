@@ -36,7 +36,7 @@ const Register = () => {
 
       alert("Registration Successful!");
       toast.success("Registration Successful! Please log in.");
-      navigate("/Login");
+      navigate("/admin-dashboard");
     } catch (error) {
       console.error(error.message);
       toast.error(error.message);
@@ -169,7 +169,7 @@ const Register = () => {
             </button>
           </div>
         </form>
-
+{/*
         <p className="text-center text-sm text-slate-400">
           Need access?{" "}
           <a
@@ -178,14 +178,14 @@ const Register = () => {
           >
             Request an account
           </a>
-        </p>
+        </p>*/}
         <div>
           <button
             onClick={() => navigate("/Login")}
             className="w-full px-10 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold uppercase tracking-widest transition-all hover:shadow-[0_0_20px_rgba(234,88,12,0.4)] rounded-sm"
           >
             <ArrowBigLeftIcon className="inline-block mr-2" size={20} />
-            Back to Login
+            Back to User Management
           </button>
         </div>
       </div>
