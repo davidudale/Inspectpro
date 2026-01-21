@@ -16,7 +16,9 @@ import EditUser from "./Components/Dashboards/AdminFiles/UserManagement/EditUser
 import ManagerDashboard from "./Components/Page/ManagerDashboard.jsx";
 import InspectionLogs from "./Components/Dashboards/AdminFiles/InspectionFile/InspectionLogs.jsx";
 import AddInspectionTemplate from "./Components/Dashboards/AdminFiles/InspectionFile/AddInspectionTemplate.jsx";
-
+import Aut from "./Components/Dashboards/AdminFiles/InspectionFile/Aut.jsx";
+import ViewInspection from "./Components/Dashboards/AdminFiles/InspectionFile/ViewInspection.jsx";
+import ItemDetailView from "./Components/Dashboards/AdminFiles/InspectionFile/ItemDetailView.jsx";
 
 function App() {
   return (
@@ -28,7 +30,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
-         {/* Inspector & Above */}
+        {/* Inspector & Above */}
         <Route
           path="/inspectionDashboard"
           element={
@@ -66,7 +68,30 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/admin/inspection-details/:id"
+          element={
+            <ProtectedRoute allowedRoles={["Manager", "Admin"]}>
+              <ViewInspection />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/inspection-item/:docId/:itemId"
+          element={
+            <ProtectedRoute allowedRoles={["Manager", "Admin"]}>
+              <ItemDetailView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/aut-report"
+          element={
+            <ProtectedRoute allowedRoles={["Manager", "Admin"]}>
+              <Aut />
+            </ProtectedRoute>
+          }
+        />
         {/* Admin Only */}
         <Route
           path="/admin-dashboard"
@@ -83,7 +108,8 @@ function App() {
               <UserPage />
             </ProtectedRoute>
           }
-        /><Route
+        />
+        <Route
           path="/admin/addusers"
           element={
             <ProtectedRoute allowedRoles={["Admin"]}>

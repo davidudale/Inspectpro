@@ -27,12 +27,25 @@ const sidebarLinks = [
     href: "/admin-dashboard",
   },
   {
-    name: "Inspection Management",
+    name: "System Setup",
+    icon: <Settings size={20} />,
+    subLinks: [
+      { name: "Project Setup", icon: <Briefcase size={16} />, href: "/admin/projects" },
+      { name: "Client Management", icon: <Wrench size={16} />, href: "/admin/Client" },
+      { name: "Location Management", icon: <Wrench size={16} />, href: "/admin/Location" },
+      { name: "Inspection Types", icon: <Wrench size={16} />, href: "/admin/equipment" },
+      { name: "Equipment Management", icon: <Wrench size={16} />, href: "/admin/equipment" },
+      { name: "System Config", icon: <Sliders size={16} />, href: "/admin/config" },
+     
+    ]
+  },
+  {
+    name: "Report Management",
     icon: <ClipboardCheck size={20} />,
     // This item has a dropdown
     subLinks: [
-      { name: "View Inspections", icon: <FileText size={16} />, href: "/admin/inspections" },
-      { name: "Add Inspections", icon: <FileText size={16} />, href: "/admin/addInspectionTemp" },
+      { name: "View Report Template", icon: <FileText size={16} />, href: "/admin/inspections" },
+      { name: "Add Report Template", icon: <FileText size={16} />, href: "/admin/addInspectionTemp" },
       
     ]
   },
@@ -46,26 +59,8 @@ const sidebarLinks = [
       
     ]
   },
-  {
-    name: "Report Management",
-    icon: <ClipboardCheck size={20} />,
-    // This item has a dropdown
-    subLinks: [
-      { name: "View Inspections", icon: <FileText size={16} />, href: "/admin/inspections" },
-      { name: "Add Inspections", icon: <FileText size={16} />, href: "/admin/addinspections" },
-      
-    ]
-  },
   { name: "User Management", icon: <Users size={20} />, href: "/admin/users" },
-  {
-    name: "System Setup",
-    icon: <Settings size={20} />,
-    subLinks: [
-      { name: "Project Setup", icon: <Briefcase size={16} />, href: "/admin/projects" },
-      { name: "Equipment Management", icon: <Wrench size={16} />, href: "/admin/equipment" },
-      { name: "System Config", icon: <Sliders size={16} />, href: "/admin/config" },
-    ]
-  },
+  
 ];
 
 const AdminSidebar = () => {
@@ -78,7 +73,7 @@ const AdminSidebar = () => {
         setOpenDropdown(openDropdown === name ? null : name);
       };
   return (
-    <aside className="w-16 min-h-screen lg:w-64 fixed border-r border-slate-800 bg-slate-900/20 transition-all duration-300 flex flex-col">
+    <aside className="w-16 h-screen lg:w-64 fixed border-r border-slate-800 bg-slate-900/20 transition-all duration-300 flex flex-col">
       <div className="p-4 lg:p-6 border-b border-slate-800/50">
         <div className="flex items-center gap-4">
           <div className="relative shrink-0">
