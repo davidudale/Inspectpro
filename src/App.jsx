@@ -25,6 +25,7 @@ import ClientManager from "./Components/Dashboards/AdminFiles/SetupManagement/Cl
 import LocationManager from "./Components/Dashboards/AdminFiles/SetupManagement/LocationManager.jsx";
 import InspectionTypeManager from "./Components/Dashboards/AdminFiles/ProjectManagement/InspectionTypeManager.jsx";
 import EquipmentManager from "./Components/Dashboards/AdminFiles/ProjectManagement/EquipmentManager.jsx";
+import ProjectEdit from "./Components/Dashboards/AdminFiles/ProjectManagement/ProjectEdit.jsx";
 
 function App() {
   return (
@@ -79,6 +80,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["Manager", "Admin"]}>
               <ViewInspection />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/viewprojects/project-edit/:id"
+          element={
+            <ProtectedRoute allowedRoles={["Manager", "Admin"]}>
+              <ProjectEdit />
             </ProtectedRoute>
           }
         />

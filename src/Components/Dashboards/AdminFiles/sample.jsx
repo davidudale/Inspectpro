@@ -1,130 +1,148 @@
-import React, { useState } from "react";
-import { 
-  LayoutDashboard, 
-  ClipboardCheck, 
-  Users, 
-  ShieldAlert, 
-  Settings, 
-  ChevronDown, 
-  Briefcase, 
-  Wrench, 
-  Sliders 
-} from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+// ... other imports
 
-const sidebarLinks = [
-  {
-    name: "Dashboard",
-    icon: <LayoutDashboard size={20} />,
-    href: "/admin-dashboard",
-  },
-  {
-    name: "Operations",
-    icon: <ClipboardCheck size={20} />,
-    // This item has a dropdown
-    subLinks: [
-      { name: "Inspections", icon: <FileText size={16} />, href: "/admin/inspections" },
-      { name: "Report Management", icon: <ShieldAlert size={16} />, href: "/admin/logs" },
-    ]
-  },
-  { name: "User Management", icon: <Users size={20} />, href: "/admin/users" },
-  {
-    name: "System Setup",
-    icon: <Settings size={20} />,
-    subLinks: [
-      { name: "Project Setup", icon: <Briefcase size={16} />, href: "/admin/projects" },
-      { name: "Equipment Management", icon: <Wrench size={16} />, href: "/admin/equipment" },
-      { name: "System Config", icon: <Sliders size={16} />, href: "/admin/config" },
-    ]
-  },
-];
+const InspectionLogs = () => {
+  // ... existing state (inspections, loading, navigate)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [phase, setPhase] = useState(1);
+  const [selectedEquip, setSelectedEquip] = useState(null);
 
-const AdminSidebar = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  // State to track which dropdown is open (by name)
-  const [openDropdown, setOpenDropdown] = useState(null);
+  // --- 1. SEARCH FILTER LOGIC ---
+  // Filters the equipment list based on the search input
+  const filteredEquipment = equipmentList.filter(
+    (asset) =>
+      asset.tag.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      asset.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-  const toggleDropdown = (name) => {
-    setOpenDropdown(openDropdown === name ? null : name);
+  // --- 2. DELETE FUNCTIONALITY ---
+  const handleDeleteAsset = async (e, assetTag) => {
+    e.stopPropagation(); // Prevents navigating to Phase 2 when clicking delete
+    if (
+      window.confirm(
+        `CRITICAL: Purge all manifests associated with Asset ${assetTag}?`,
+      )
+    ) {
+      try {
+        // We find all batches containing this equipment reference
+        const targets = inspections.filter((ins) =>
+          ins.items?.some((item) => item.reference === assetTag),
+        );
+
+        await Promise.all(
+          targets.map((t) => deleteDoc(doc(db, "inspections", t.id))),
+        );
+        toast.error(`Asset ${assetTag} manifests removed`);
+      } catch (error) {
+        toast.error("Deletion failed");
+      }
+    }
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-16 lg:w-64 border-r border-slate-800 bg-slate-950/50 backdrop-blur-xl transition-all duration-300 flex flex-col z-50">
-      {/* Profile Section */}
-      <div className="p-4 lg:p-6 border-b border-slate-800/50">
-        <div className="flex items-center gap-4">
-          <div className="relative shrink-0">
-            <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 p-0.5">
-              <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center text-white font-bold text-xs lg:text-sm">
-                AV
+    <div className="flex flex-col min-h-screen bg-slate-950 text-slate-200">
+      <AdminNavbar />
+      <div className="flex flex-1">
+        <AdminSidebar />
+        <main className="flex-1 ml-16 lg:ml-64 p-8 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slate-900/50 via-slate-950 to-slate-950">
+          <div className="max-w-7xl mx-auto">
+            {/* SEARCH HEADER */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+              <div>
+                <h1 className="text-3xl font-bold uppercase tracking-tighter text-white">
+                  {phase === 1
+                    ? "Technical Asset Hub"
+                    : `Archives: ${selectedEquip}`}
+                </h1>
               </div>
-            </div>
-            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-slate-950 rounded-full"></div>
-          </div>
-          <div className="hidden lg:block">
-            <p className="text-xs font-bold text-white uppercase tracking-tight truncate">Alex InspectPro</p>
-            <p className="text-[10px] text-slate-500 uppercase font-bold">System Admin</p>
-          </div>
-        </div>
-      </div>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-        {sidebarLinks.map((link, index) => {
-          const hasSubLinks = !!link.subLinks;
-          const isOpen = openDropdown === link.name;
-          const isActive = location.pathname === link.href;
-
-          return (
-            <div key={index} className="w-full">
-              {/* Main Link or Dropdown Trigger */}
-              <div
-                onClick={() => hasSubLinks ? toggleDropdown(link.name) : navigate(link.href)}
-                className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all group
-                  ${isActive ? "bg-orange-600/10 text-orange-500" : "text-slate-400 hover:bg-slate-800/50 hover:text-white"}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`${isActive ? "text-orange-500" : "group-hover:text-orange-500"} transition-colors`}>
-                    {link.icon}
-                  </div>
-                  <span className="hidden lg:block text-sm font-semibold tracking-wide">
-                    {link.name}
-                  </span>
-                </div>
-                
-                {/* Chevron Icon for Dropdowns */}
-                {hasSubLinks && (
-                  <ChevronDown 
-                    size={16} 
-                    className={`hidden lg:block transition-transform duration-300 ${isOpen ? "rotate-180 text-orange-500" : ""}`} 
+              {phase === 1 && (
+                <div className="relative group w-full md:w-80">
+                  <Search
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-orange-500 transition-colors"
+                    size={16}
                   />
-                )}
-              </div>
-
-              {/* Dropdown Content */}
-              {hasSubLinks && isOpen && (
-                <div className="hidden lg:block ml-9 mt-1 space-y-1 border-l border-slate-800">
-                  {link.subLinks.map((sub, subIdx) => (
-                    <button
-                      key={subIdx}
-                      onClick={() => navigate(sub.href)}
-                      className={`w-full flex items-center gap-3 pl-4 py-2 text-xs font-medium rounded-r-lg transition-all
-                        ${location.pathname === sub.href 
-                          ? "text-orange-500 bg-orange-500/5 border-l-2 border-orange-500" 
-                          : "text-slate-500 hover:text-slate-200 hover:bg-slate-800/30"}`}
-                    >
-                      {sub.name}
-                    </button>
-                  ))}
+                  <input
+                    type="text"
+                    placeholder="Search Tag or Equipment Name..."
+                    className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl py-3 pl-12 pr-4 text-xs focus:border-orange-500 outline-none transition-all shadow-inner"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
                 </div>
               )}
             </div>
-          );
-        })}
-      </nav>
-    </aside>
+
+            {/* PHASE 1: EQUIPMENT GRID WITH ADMIN CONTROLS */}
+            {phase === 1 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in duration-500">
+                {filteredEquipment.map((asset) => (
+                  <div
+                    key={asset.tag}
+                    onClick={() => {
+                      setSelectedEquip(asset.tag);
+                      setPhase(2);
+                    }}
+                    className="group bg-slate-900/40 border border-slate-800 p-8 rounded-[2.5rem] hover:border-orange-500/50 transition-all cursor-pointer text-center relative overflow-hidden backdrop-blur-sm"
+                  >
+                    {/* HOVER ACTIONS */}
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate("/admin/equipment-management"); // Redirect to main manager for edits
+                        }}
+                        className="p-2 bg-slate-950 border border-slate-800 text-blue-400 hover:text-white hover:bg-blue-600 rounded-xl transition-all"
+                      >
+                        <Edit2 size={12} />
+                      </button>
+                      <button
+                        onClick={(e) => handleDeleteAsset(e, asset.tag)}
+                        className="p-2 bg-slate-950 border border-slate-800 text-red-400 hover:text-white hover:bg-red-600 rounded-xl transition-all"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+
+                    <Cog
+                      className="mx-auto mb-4 text-slate-700 group-hover:text-orange-500 group-hover:rotate-90 transition-all"
+                      size={40}
+                    />
+
+                    <h3 className="text-white font-bold uppercase tracking-tight">
+                      {asset.tag}
+                    </h3>
+                    <p className="text-[11px] text-orange-500/80 font-bold uppercase mt-1 truncate">
+                      {asset.name || "Unnamed Asset"}
+                    </p>
+
+                    <div className="mt-6 pt-4 border-t border-slate-800/50 flex items-center justify-center gap-2">
+                      <Database size={10} className="text-slate-600" />
+                      <span className="text-[9px] text-slate-500 font-black tracking-widest uppercase">
+                        Protocol Access
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Empty State for Search */}
+            {phase === 1 && filteredEquipment.length === 0 && (
+              <div className="py-20 text-center opacity-50">
+                <FileSearch className="mx-auto mb-4 text-slate-800" size={48} />
+                <p className="text-xs uppercase font-bold tracking-widest">
+                  No matching assets found
+                </p>
+              </div>
+            )}
+
+            {/* Existing Phase 2 and Phase 3 Logic remains below... */}
+          </div>
+        </main>
+      </div>
+    </div>
   );
 };
 
-export default AdminSidebar;
+export default InspectionLogs;

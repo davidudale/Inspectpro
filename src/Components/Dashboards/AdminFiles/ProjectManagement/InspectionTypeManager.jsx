@@ -111,8 +111,8 @@ const InspectionTypeManager = () => {
             {/* Header & Advanced Filter */}
             <div className="flex flex-col xl:flex-row xl:items-center justify-between mb-10 gap-6">
               <div>
-                <h1 className="text-3xl font-bold uppercase tracking-tighter text-white">Technical Standards</h1>
-                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Regulatory Protocols Configuration</p>
+                <h1 className="text-3xl font-bold uppercase tracking-tighter text-white">Inspection Types</h1>
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Inspection Type Configuration</p>
               </div>
               
               <div className="flex flex-col md:flex-row items-center gap-4">
@@ -127,7 +127,7 @@ const InspectionTypeManager = () => {
                   />
                 </div>
                 <button onClick={() => setIsModalOpen(true)} className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3.5 rounded-2xl font-bold uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-orange-900/20 transition-all active:scale-95">
-                  <Plus size={16}/> New Standard
+                  <Plus size={16}/> Add New Inspwction Type
                 </button>
               </div>
             </div>
@@ -138,8 +138,8 @@ const InspectionTypeManager = () => {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-slate-800 bg-slate-950/50">
-                      <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Protocol Code</th>
-                      <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Full Reference</th>
+                      <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Inspection Type Code</th>
+                      <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Reference</th>
                       <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Techniques</th>
                       <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Category</th>
                       <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">Actions</th>

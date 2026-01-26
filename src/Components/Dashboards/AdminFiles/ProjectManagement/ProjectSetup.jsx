@@ -126,7 +126,7 @@ const ProjectSetup = () => {
   const handleCreateProject = async (e) => {
     e.preventDefault();
     if (!setupData.projectName || !setupData.client || !setupData.locationId || !setupData.inspectionType) {
-      return toast.warn("Operational Manifest Incomplete.");
+      return toast.warn("Project Set-Up Incomplete.");
     }
 
     setIsSubmitting(true);
@@ -137,9 +137,9 @@ const ProjectSetup = () => {
         createdAt: serverTimestamp(),
         status: "Planned"
       });
-      toast.success("Operational Hub Deployed");
+      toast.success("Project Deployed");
       
-      navigate("/admin/inspections", { 
+      navigate("/viewprojects", { 
         state: { 
           projectContext: {
             ...setupData,
@@ -166,10 +166,10 @@ const ProjectSetup = () => {
             <header className="mb-10 flex justify-between items-end border-b border-slate-900 pb-8">
               <div>
                 <h1 className="text-3xl font-bold uppercase tracking-tighter flex items-center gap-3 text-white">
-                  <Shield className="text-orange-500" /> Operational Deployment
+                  <Shield className="text-orange-500" /> Project Deployment
                 </h1>
                 <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">
-                   Manifest Ref: {setupData.projectId}
+                   Project Ref: {setupData.projectId}
                 </p>
               </div>
             </header>
@@ -180,7 +180,7 @@ const ProjectSetup = () => {
                 {/* 1. CLIENT DATA CONTEXT */}
                 <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-[2.5rem] backdrop-blur-md">
                   <h2 className="text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-8 flex items-center gap-2">
-                    <Building2 size={14}/> 1. Corporate Identity Mapping
+                    <Building2 size={14}/> 1. Client Identity
                   </h2>
                   <div className="flex flex-col md:flex-row gap-8 items-center">
                     <div className="w-40 h-40 border-2 border-slate-800 rounded-3xl bg-slate-950/50 flex items-center justify-center p-4 shadow-inner relative group">
@@ -196,11 +196,11 @@ const ProjectSetup = () => {
                       <div className="space-y-2">
                         <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-1">Registered Client Portfolio</label>
                         <select className="w-full bg-slate-950 border border-slate-800 p-4 rounded-2xl text-sm outline-none focus:border-orange-500" onChange={(e) => handleClientMapping(e.target.value)}>
-                          <option value="">Choose Corporate Entity...</option>
+                          <option value="">Choose Client...</option>
                           {registeredClients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                       </div>
-                      <SetupInput label="Project Manifest Name" icon={<Briefcase size={12}/>} value={setupData.projectName} onChange={(v) => setSetupData({...setupData, projectName: v})} />
+                      <SetupInput label="Project Name" icon={<Briefcase size={12}/>} value={setupData.projectName} onChange={(v) => setSetupData({...setupData, projectName: v})} />
                     </div>
                   </div>
                 </div>
@@ -240,12 +240,12 @@ const ProjectSetup = () => {
               {/* 3. LOGISTICS & STANDARDS DATA CONTEXT */}
               <div className="space-y-8">
                 <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-[2.5rem] space-y-6">
-                   <h2 className="text-xs font-bold text-orange-500 uppercase tracking-[0.2em]">3. Compliance & Geodata</h2>
+                   <h2 className="text-xs font-bold text-orange-500 uppercase tracking-[0.2em]">3. Inspection Type Details</h2>
                    
                    <div className="space-y-2">
                       <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-1">Regulatory Standard</label>
                       <select className="w-full bg-slate-950 border border-slate-800 p-4 rounded-2xl text-sm outline-none" onChange={(e) => handleTypeMapping(e.target.value)}>
-                        <option value="">Select Technical Code...</option>
+                        <option value="">Select Inspection Type Code...</option>
                         {inspectionTypes.map(t => <option key={t.id} value={t.title}>{t.title} — {t.fullName}</option>)}
                       </select>
                    </div>
@@ -269,9 +269,9 @@ const ProjectSetup = () => {
 
                 <div className="bg-orange-600 rounded-[3rem] p-8 text-white shadow-2xl shadow-orange-900/30 group overflow-hidden relative">
                    <Shield className="absolute -right-4 -top-4 text-white/10 group-hover:scale-110 transition-transform duration-500" size={120} />
-                  <h3 className="font-bold uppercase text-xl mb-4 relative z-10">Deploy Hub</h3>
+                  <h3 className="font-bold uppercase text-xl mb-4 relative z-10">Deploy</h3>
                   <button disabled={isSubmitting} className="w-full bg-white text-orange-600 py-4 rounded-2xl font-bold uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 hover:shadow-xl transition-all relative z-10 active:scale-95">
-                    {isSubmitting ? "Syncing Directories..." : "Initialize Operational Hub"} <ArrowRight size={14}/>
+                    {isSubmitting ? "Syncing Directories..." : "Initialize Project"} <ArrowRight size={14}/>
                   </button>
                 </div>
               </div>

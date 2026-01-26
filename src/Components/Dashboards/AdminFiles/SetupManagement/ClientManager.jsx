@@ -81,14 +81,14 @@ const ClientManager = () => {
           ...newClient,
           updatedAt: serverTimestamp()
         });
-        toast.success("Entity Profile Updated");
+        toast.success("Client Profile Updated");
       } else {
         await addDoc(collection(db, "clients"), {
           ...newClient,
           createdAt: serverTimestamp(),
           activeProjects: 0
         });
-        toast.success("Entity Authorized: Proceed to Location Mapping");
+        toast.success("Client Authorized: Proceed to Location Mapping");
          
       }
       closeModal();
@@ -121,7 +121,7 @@ const ClientManager = () => {
             <div className="flex flex-col xl:flex-row xl:items-center justify-between mb-10 gap-6">
               <div>
                 <h1 className="text-3xl font-bold uppercase tracking-tighter text-white">Client Portfolio</h1>
-                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Enterprise Directory / Stakeholder Management</p>
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Enterprise Directory</p>
               </div>
 
               <div className="flex flex-col md:flex-row items-center gap-4">
@@ -136,7 +136,7 @@ const ClientManager = () => {
                   />
                 </div>
                 <button onClick={() => setIsModalOpen(true)} className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3.5 rounded-2xl font-bold uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-orange-900/20 transition-all active:scale-95">
-                  <Plus size={16}/> Register New Entity
+                  <Plus size={16}/> Register New Client
                 </button>
               </div>
             </div>
@@ -147,7 +147,7 @@ const ClientManager = () => {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-slate-800 bg-slate-950/50">
-                      <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Entity Branding</th>
+                      <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Client Branding</th>
                       <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Industry Context</th>
                       <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Communication Channel</th>
                       <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">Active Scale</th>
@@ -213,7 +213,7 @@ const ClientManager = () => {
               {filteredClients.length === 0 && (
                 <div className="py-20 text-center flex flex-col items-center">
                    <Building2 size={40} className="text-slate-800 mb-4" />
-                   <p className="text-[10px] font-bold uppercase text-slate-600 tracking-widest">No stakeholders found matching query</p>
+                   <p className="text-[10px] font-bold uppercase text-slate-600 tracking-widest">No Client found matching</p>
                 </div>
               )}
             </div>
@@ -241,7 +241,7 @@ const ClientManager = () => {
                 </label>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Entity Name</label>
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Client Name</label>
                 <input required className="w-full bg-slate-950 border border-slate-800 p-4 rounded-2xl text-sm text-white focus:border-orange-500 outline-none" value={newClient.name} onChange={(e) => setNewClient({...newClient, name: e.target.value})} />
               </div>
               <div className="grid grid-cols-2 gap-4">

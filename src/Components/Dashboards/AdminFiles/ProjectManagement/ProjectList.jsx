@@ -142,7 +142,7 @@ const ProjectList = () => {
                           <td className="p-6 text-right">
                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                               <button 
-                                onClick={() => navigate("/admin/project-setup", { state: { editMode: true, project } })}
+                                onClick={() => navigate("/viewprojects/project-edit/:id", { state: { editMode: true, project } })}
                                 className="p-2.5 bg-slate-950 border border-slate-800 text-slate-500 hover:text-blue-500 hover:border-blue-500/50 transition-all rounded-xl shadow-inner"
                                 title="Edit Project"
                               >
